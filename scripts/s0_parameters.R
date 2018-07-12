@@ -39,6 +39,7 @@ lsat_dir <- paste0(rootdir,"data/mosaic_lsat/")
 seg_dir  <- paste0(rootdir,"data/segments/")
 dd_dir   <- paste0(rootdir,"data/dd_map/")
 
+dir.create(data_dir,showWarnings = F)
 dir.create(gadm_dir,showWarnings = F)
 dir.create(gfcstore_dir,showWarnings = F)
 dir.create(gfc_dir,showWarnings = F)
@@ -54,3 +55,4 @@ gfc_tc       <- paste0(gfc_dir,"gfc_th",gfc_threshold,"_tc.tif")
 gfc_ly       <- paste0(gfc_dir,"gfc_th",gfc_threshold,"_ly.tif")
 gfc_gn       <- paste0(gfc_dir,"gfc_gain.tif")
 gfc_16       <- paste0(gfc_dir,"gfc_th",gfc_threshold,"_F_2016.tif")
+

@@ -121,3 +121,4 @@ download_gfc_2016(tiles,
                   gfcstore_dir,
                   images = c("treecover2000","lossyear","gain","datamask"))
 endCluster()
+df_tiles@data
