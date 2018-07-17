@@ -67,13 +67,20 @@ system(sprintf("gdal_calc.py -A %s -B %s --co COMPRESS=LZW --outfile=%s --calc=\
                paste0("(A>",gfc_threshold,")*B")
 ))
 
-#################### CREATE GFC TREE COVER MAP IN 2016 AT THRESHOLD (0 nodata, 1 no forest, 2 forest)
+#################### CREATE GFC FOREST MASK IN 2000 AT THRESHOLD (0 no forest, 1 forest)
+system(sprintf("gdal_calc.py -A %s --co COMPRESS=LZW --outfile=%s --calc=\"%s\"",
+               gfc_tc,
+               gfc_00,
+               "A>0"
+))
+
+#################### CREATE GFC FOREST MASK IN 2016 AT THRESHOLD (0 no forest, 1 forest)
 system(sprintf("gdal_calc.py -A %s -B %s -C %s --co COMPRESS=LZW --outfile=%s --calc=\"%s\"",
                gfc_tc,
                gfc_ly,
                gfc_gn,
                gfc_16,
-               "(C==1)*2+(C==0)*((B==0)*(A>0)*2+(B==0)*(A==0)*1+(B>0)*0)"
+               "(C==1)*1+(C==0)*((B==0)*(A>0)*1+(B==0)*(A==0)*0+(B>0)*0)"
 ))
 
 ####################################################################################
