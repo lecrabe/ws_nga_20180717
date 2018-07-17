@@ -93,6 +93,16 @@ system(sprintf("gdal_translate -ot Byte -projwin %s %s %s %s -co COMPRESS=LZW %s
 ))
 
 
+#############################################################
+### CROP TO COUNTRY BOUNDARIES
+system(sprintf("python %s/oft-cutline_crop.py -v %s -i %s -o %s -a %s",
+               scriptdir,
+               paste0(gadm_dir,"districtos_laea.shp"),
+               paste0(res_dir,"tmp_map_prj.tif"),
+               paste0(res_dir,"tmp_dt_merge_clip.tif"),
+               "id"
+))
+
 time_products_global <- Sys.time() - time_start
 
 
