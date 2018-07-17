@@ -11,7 +11,7 @@ time_start  <- Sys.time()
 ####################################################################################
 ####### GET COUNTRY BOUNDARIES
 ####################################################################################
-aoi <- getData('GADM',path=paste0(rootdir,"/data/gadm/"), country= "NGA", level=2)
+aoi <- getData('GADM',path=paste0(rootdir,"/data/gadm/"), country= "NGA", level=1)
 bb <- extent(aoi)
 
 ####################################################################################
@@ -76,4 +76,19 @@ system(sprintf("gdal_calc.py -A %s -B %s -C %s --co COMPRESS=LZW --outfile=%s --
                "(C==1)*2+(C==0)*((B==0)*(A>0)*2+(B==0)*(A==0)*1+(B>0)*0)"
 ))
 
+####################################################################################
+####### CLIP ESA MAP TO COUNTRY BOUNDING BOX
+####################################################################################
+system(sprintf("gdal_translate -ot Byte -projwin %s %s %s %s -co COMPRESS=LZW %s %s",
+               floor(bb@xmin),
+               ceiling(bb@ymax),
+               ceiling(bb@xmax),
+               floor(bb@ymin),
+               paste0(esa_folder,"ESACCI-LC-L4-LC10-Map-20m-P1Y-2016-v1.0.tif"),
+               paste0(esa_dir,"esa.tif")
+))
+
+
 time_products_global <- Sys.time() - time_start
+
+
