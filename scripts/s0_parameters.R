@@ -34,6 +34,7 @@ esa_folder    <- "~/downloads/ESA_2016/"
 setwd(rootdir)
 rootdir <- paste0(getwd(),"/")
 
+scriptdir<- paste0(rootdir,"scripts/")
 data_dir <- paste0(rootdir,"data/")
 gadm_dir <- paste0(rootdir,"data/gadm/")
 gfc_dir  <- paste0(rootdir,"data/gfc/")
