@@ -11,11 +11,11 @@ time_start  <- Sys.time()
 ####################################################################################
 ####### GET COUNTRY BOUNDARIES
 ####################################################################################
-aoi <- getData('GADM',path=paste0(rootdir,"/data/gadm/"), country= "NGA", level=1)
+aoi <- getData('GADM',path=paste0(rootdir,"/data/gadm/"), country= the_country, level=1)
 bb <- extent(aoi)
 
 ####################################################################################
-####### CLIP GFC DATA TO CAMBODIA BOUNDARIES
+####### CLIP GFC DATA TO BOUNDARIES
 ####################################################################################
 setwd(gfc_dir)
 
@@ -48,9 +48,6 @@ system(sprintf("rm %s",
                ))
   print(to_merge)
 }
-
-
-
 
 #################### CREATE GFC TREE COVER MAP in 2000 AT THRESHOLD
 system(sprintf("gdal_calc.py -A %s --co COMPRESS=LZW --outfile=%s --calc=\"%s\"",

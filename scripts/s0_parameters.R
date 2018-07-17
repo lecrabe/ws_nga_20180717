@@ -29,7 +29,7 @@ library(rgdal)
 rootdir       <- "~/ws_nga_20180717/"
 gfcstore_dir  <- "~/downloads/gfc_2016/"
 esa_folder    <- "~/downloads/ESA_2016/"
-
+the_country   <- "NGA"
 
 setwd(rootdir)
 rootdir <- paste0(getwd(),"/")
