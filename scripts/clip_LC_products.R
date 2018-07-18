@@ -99,6 +99,16 @@ system(sprintf("python %s/oft-cutline_crop.py -v %s -i %s -o %s -a %s",
                "OBJECTID"
 ))
 
+#############################################################
+### CROP TO ONE STATE BOUNDARIES
+system(sprintf("python %s/oft-cutline_crop.py -v %s -i %s -o %s -a %s",
+               scriptdir,
+               paste0(gadm_dir,"work_aoi_sub.shp"),
+               gfc_mp_crop,
+               gfc_mp_sub,
+               "OBJECTID"
+))
+
 ####################################################################################
 ####### CLIP ESA MAP TO COUNTRY BOUNDING BOX
 ####################################################################################
@@ -121,6 +131,18 @@ system(sprintf("python %s/oft-cutline_crop.py -v %s -i %s -o %s -a %s",
                paste0(esa_dir,"esa_crop.tif"),
                "OBJECTID"
 ))
+
+#############################################################
+### CROP TO ONE STATE BOUNDARIES
+system(sprintf("python %s/oft-cutline_crop.py -v %s -i %s -o %s -a %s",
+               scriptdir,
+               paste0(gadm_dir,"work_aoi_sub.shp"),
+               paste0(esa_dir,"esa_crop.tif"),
+               paste0(esa_dir,"esa_sub_crop.tif"),
+               "OBJECTID"
+))
+
+
 
 time_products_global <- Sys.time() - time_start
 

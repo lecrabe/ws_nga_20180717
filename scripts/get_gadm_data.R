@@ -48,4 +48,5 @@ plot(sub_aoi,add=T,col="red")
 
 sub_aoi@data <- sub_aoi@data[,c("OBJECTID","ISO")]
 writeOGR(sub_aoi,paste0(gadm_dir,"work_aoi_crs.kml"),"work_aoi_crs","KML",overwrite_layer = T)
+writeOGR(sub_aoi,paste0(gadm_dir,"work_aoi_sub.shp"),"work_aoi_sub","ESRI Shapefile",overwrite_layer = T)
 
