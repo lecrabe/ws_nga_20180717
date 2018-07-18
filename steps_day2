@@ -1,0 +1,9 @@
+Open SEPAL.IO
+Go to TErminal and start Instance #4
+Open Process/Rstudio
+
++ source(s0_parameters.R)
+  - source(get_gadm.R)
+  - source(download_ESA.R)
++ source(download_GFC.R)
++ source(clip_LC_products.R)
