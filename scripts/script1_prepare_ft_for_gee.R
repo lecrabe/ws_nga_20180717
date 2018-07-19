@@ -18,12 +18,19 @@ library(foreign)
 #######################################################################
 ##############################     SETUP YOUR DATA 
 #######################################################################
+the_map <- gfc_mp_sub
 
-## Set your working directory
-setwd("/media/dannunzio/OSDisk/Users/dannunzio/Documents/countries/nigeria/aa_map_nigeria/")
+sae_dir  <- paste0(gfc_dir,
+                   "sae_design_",
+                   substr(basename(the_map),
+                          1,
+                          nchar(basename(the_map))-4
+                          ),
+                   "/"
+                   )
 
 ## Read the datafile and setup the correct names for the variables
-pts <- read.csv("CE_2018-03-08.cep_FILES/pts_CE_2018-03-08.csv")
+pts <- read.csv(paste0(sae_dir,"pts_CE_2018-07-19.csv"))
 names(pts)
 
 map_code <- "map_class"
@@ -75,7 +82,7 @@ proj4string(spdf)<-CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs8
 head(spdf)
 
 #################### Export as shapefile or KML
-writeOGR(obj=spdf,dsn="pts_2km_boxes.kml",layer="pts_2km_boxes",driver="KML",overwrite_layer = T)
+writeOGR(obj=spdf,dsn=paste0(sae_dir,"pts_2km_boxes.kml"),layer="pts_2km_boxes",driver="KML",overwrite_layer = T)
 #writeOGR(obj=spdf,dsn="pts_2km_boxes.shp",layer="pts_2km_boxes",driver="ESRI Shapefile",overwrite_layer = T)
 
 
@@ -119,8 +126,8 @@ nrow(sqr_df_selected@data)
 #######################################################################
 ### PART III: Export as KML
 #######################################################################
-base_sqr <- paste("download_area_grid_lsat",sep="")
-writeOGR(obj=sqr_df_selected,dsn=paste(base_sqr,".kml",sep=""),layer=base_sqr,driver = "KML",overwrite_layer = T)
+base_sqr <- "download_area_grid_lsat"
+writeOGR(obj=sqr_df_selected,dsn=paste0(sae_dir,base_sqr,".kml"),layer=base_sqr,driver = "KML",overwrite_layer = T)
 
 
 #######################################################################
@@ -163,10 +170,5 @@ nrow(sqr_df_selected@data)
 #######################################################################
 ### PART V: Export as KML
 #######################################################################
-base_sqr <- paste("download_area_grid_stnl",sep="")
-writeOGR(obj=sqr_df_selected,dsn=paste(base_sqr,".kml",sep=""),layer=base_sqr,driver = "KML",overwrite_layer = T)
-
-
-
-
-
+base_sqr <- "download_area_grid_stnl"
+writeOGR(obj=sqr_df_selected,dsn=paste0(sae_dir,base_sqr,".kml"),layer=base_sqr,driver = "KML",overwrite_layer = T)

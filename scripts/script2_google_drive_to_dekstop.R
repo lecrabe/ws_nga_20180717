@@ -13,9 +13,6 @@
 ###################################################################################
 
 #### Root directory
-rootdir <- "/media/dannunzio/OSDisk/Users/dannunzio/Documents/countries/nigeria/aa_map_nigeria/"
-setwd(rootdir)
-
 
 ####################################################################################################################
 ####### VISIT HERE TO GET AUTHORIZATION KEY
@@ -26,10 +23,11 @@ setwd(rootdir)
 
 #### Select a basename for the archives to transfer
 base <- 'median_roi_clip'
+setwd(rootdir)
 
 #### Initialize the DRIVE function, change the authorization key
 system(sprintf("echo %s | drive init",
-               "4/AABkgGf4807li-DLf4wV9Ll12WGxBiJjBDFJ31Q7Bm1OwPfECoRU_3g"))
+               "4/AABFJCVfF9S8f8CHAXbsjp6pQ6mYUMaYflGtBlZbU-ahCAuy_jrHA5s"))
 
 #### Read list of files in GEDrive that contain base
 system(sprintf("drive list -matches %s > %s",
@@ -45,12 +43,12 @@ for(data in data_input){
 }
 
 #### Create two destination folders
-dir.create(paste0(rootdir,"time_series_image_dir/landsat/"),recursive = T)
-dir.create(paste0(rootdir,"time_series_image_dir/sentinel/"),recursive = T)
+dir.create(paste0(data_dir,"time_series_image_dir/landsat/"),recursive = T)
+dir.create(paste0(data_dir,"time_series_image_dir/sentinel/"),recursive = T)
 
 #### Make a subset for LANDSAT and one for SENTINEL
 lsat <- data_input[grep(paste0("lsat"),data_input)]
 stnl <- data_input[grep(paste0("s2"),data_input)]
 
-lapply(lsat,function(x){file.rename(x,paste0(rootdir,"time_series_image_dir/landsat/",x))})
-lapply(stnl,function(x){file.rename(x,paste0(rootdir,"time_series_image_dir/sentinel/",x))})
+lapply(lsat,function(x){file.rename(x,paste0(data_dir,"time_series_image_dir/landsat/",x))})
+lapply(stnl,function(x){file.rename(x,paste0(data_dir,"time_series_image_dir/sentinel/",x))})

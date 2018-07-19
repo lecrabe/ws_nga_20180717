@@ -25,38 +25,33 @@ library(rgeos)
 ##########################################################################################################################################################################
 
 ############################################################
-#################### SET WORKING ENVIRONMENT
-rootdir <-  ""
-setwd(rootdir)
-rootdir <- paste0(getwd(),"/")
-imgdir  <- ""
 
 ############################################################
 #################### SET PARAMETERS
 
 ## Setup the number of snippets to generate
-how_many <- 45
+how_many <- 1
 
 #### Name of the directory where your Landsat data is
-lsat_dir <- paste0(imgdir,"landsat/")
+lsat_dir <- paste0(data_dir,"time_series_image_dir/landsat/")
 
 #### Name of the directory where your Sentinel data is
-stnl_dir <- paste0(imgdir,"sentinel/")
+stnl_dir <- paste0(data_dir,"time_series_image_dir/sentinel/")
 
 
 #### Name of the directory where your data will be stored in output
-dest_dir <- paste0(rootdir,"clip_time_series/")
+dest_dir <- paste0(data_dir,"time_series_image_dir/clip_time_series/")
 
 #### NAME MUST IN FORMAT paste0(lsat_basename,"YYYY_bbx.tif")
 lsat_basename <- "median_roi_clip_lsat_"
 stnl_basename <- "median_roi_clip_s2_"
 
 ## The export image will be in a 3 (height) x 6 (width) grid box
-dim_v_grid <- 3
+dim_v_grid <- 4
 dim_h_grid <- 6
 
 ## setup year start and end for landsat 
-yr_str_lsat <- 2006
+yr_str_lsat <- 2000
 yr_end_lsat <- 2015
 
 ## setup year start and end for sentinel
@@ -76,7 +71,7 @@ bb_pos_lsat <- nchar(lsat_basename)+6
 bb_pos_stnl <- nchar(stnl_basename)+6
 
 ## Read the datafile 
-pts <- read.csv("pts_CE_2018-05-10.csv")  #####  CHANGE TO MY VALUE HERE
+pts <- read.csv(paste0(sae_dir,"pts_CE_2018-07-19.csv"))  #####  CHANGE TO MY VALUE HERE
 head(pts)
 names(pts)
 
@@ -108,10 +103,6 @@ pt_df_geo <- SpatialPointsDataFrame(
   proj4string=CRS("+init=epsg:4326")
 )
 
-
-################# Create spatial point file in UTM
-proj_utm  <- proj4string(raster(paste0(rpdy_dir,list.files(rpdy_dir,pattern=glob2rx("*.tif"))[1])))
-pt_df_utm <- spTransform(pt_df_geo,proj_utm)
 
 
 ################ Create the index of the Landsat tiles
@@ -172,76 +163,18 @@ stnl_idx@data
 plot(stnl_idx,add=T)
 
 ################# Project both into Lat-Lon EPSG:4326
-proj4string(pt_df_geo) <- proj4string(lsat_idx) <- proj4string(stnl_idx)  <- CRS("+init=epsg:4326")
+proj4string(pt_df_geo) <- CRS("+init=epsg:4326")
+proj4string(lsat_idx)  <- CRS("+init=epsg:4326")
+proj4string(stnl_idx)  <- CRS("+init=epsg:4326")
 
 
-################ Create the index of the Rapideye tiles
-list_rpdy <- list.files(rpdy_dir,pattern=glob2rx("*.tif"))
-lp<-list()
-
-for(file in list_rpdy){
-  raster <- raster(paste(rpdy_dir,file,sep=""))
-  
-  e<-extent(raster)
-  
-  poly <- Polygons(list(Polygon(cbind(
-    c(e@xmin,e@xmin,e@xmax,e@xmax,e@xmin),
-    c(e@ymin,e@ymax,e@ymax,e@ymin,e@ymin))
-  )),file)
-  lp <- append(lp,list(poly))
-}
-
-## Transform the list into a SPDF
-rpdy_idx <-SpatialPolygonsDataFrame(
-  SpatialPolygons(lp,1:length(lp)), 
-  data.frame(list_rpdy), 
-  match.ID = F
-)
-
-names(rpdy_idx@data) <- "bb"
-proj4string(rpdy_idx) <- proj_utm
-plot(rpdy_idx)
-plot(pt_df_utm,add=T)
-
-
-################ Create the index of the SPOT tiles
-list_spot <- list.files(spot_dir,pattern=glob2rx("*.tif"))
-lp<-list()
-
-for(file in list_spot){
-  raster <- raster(paste(spot_dir,file,sep=""))
-  
-  e<-extent(raster)
-  
-  poly <- Polygons(list(Polygon(cbind(
-    c(e@xmin,e@xmin,e@xmax,e@xmax,e@xmin),
-    c(e@ymin,e@ymax,e@ymax,e@ymin,e@ymin))
-  )),file)
-  lp <- append(lp,list(poly))
-}
-
-## Transform the list into a SPDF
-spot_idx <-SpatialPolygonsDataFrame(
-  SpatialPolygons(lp,1:length(lp)), 
-  data.frame(list_spot), 
-  match.ID = F
-)
-
-names(spot_idx@data) <- "bb"
-proj4string(spot_idx) <- proj_utm
-plot(spot_idx)
-plot(pt_df_utm,add=T)
 
 ################# Intersect points with index of imagery and append ID's of imagery to data.frame
 pts_lsat <- over(pt_df_geo,lsat_idx)
 pts_stnl <- over(pt_df_geo,stnl_idx)
-pts_rpdy <- over(pt_df_utm,rpdy_idx)
-pts_spot <- over(pt_df_utm,spot_idx)
 
 pts<-cbind(pts,pts_lsat$bb)
 pts<-cbind(pts,pts_stnl$bb)
-pts<-cbind(pts,pts_rpdy$bb)
-pts<-cbind(pts,pts_spot$bb)
 
 ################# Create the outside boundaries box (1km // twice 500m from center of box)
 lp<-list()
@@ -268,10 +201,6 @@ outbox<-SpatialPolygonsDataFrame(
 
 proj4string(outbox) <- CRS("+init=epsg:4326")
 
-## Transform the list into a SPDF
-outbox_utm <- spTransform(outbox,proj_utm)
-
-
 ################# Create the 0.5 ha box (70/2 = 35m shift from center)
 lp<-list()
 ysize <- interpretation_box_size/111321
@@ -296,10 +225,7 @@ inbox<-SpatialPolygonsDataFrame(
 )
 
 proj4string(inbox) <- CRS("+init=epsg:4326")
-inbox_utm          <- spTransform(inbox,proj_utm)
-
-proj4string(inbox)     <- proj4string(outbox) <- CRS("+init=epsg:4326")
-proj4string(inbox_utm) <- proj4string(outbox_utm) <- proj_utm
+proj4string(inbox) <- proj4string(outbox) <- CRS("+init=epsg:4326")
 
 
 ################ Create the list of ID's to process
@@ -356,23 +282,14 @@ for(the_id in listodo[1:to_go]){
     one_poly@bbox["y","min"]-1/111321,
     one_poly@bbox["y","max"]+1/111321)
   
-  ####################################################################
-  ##### Delimitations of the plot in UTM coordinates
-  one_poly_utm <- outbox_utm[outbox_utm@data[,point_id]==the_id,]
-  in_poly_utm  <-   inbox_utm[inbox_utm@data[,point_id]==the_id,]
-
-  margins_utm <- extent(
-    one_poly_utm@bbox["x","min"]-100,
-    one_poly_utm@bbox["x","max"]+100,
-    one_poly_utm@bbox["y","min"]-100,
-    one_poly_utm@bbox["y","max"]+100)
-
+  
   ###################################################################
   ################# Find the corresponding indexes
-  lsat_bbox <- the_pt[,"pts_lsat$bb"]
-  stnl_bbox <- the_pt[,"pts_stnl$bb"]
-  rpdy_bbox <- the_pt[,"pts_rpdy$bb"]
-  spot_bbox <- the_pt[,"pts_spot$bb"]
+  tryCatch({lsat_bbox <- the_pt[,"pts_lsat$bb"]},
+           error=function(e){print(paste0("no image available"))})
+  
+  tryCatch({stnl_bbox <- the_pt[,"pts_stnl$bb"]},
+           error=function(e){print(paste0("no image available"))})
   
   ################# Set the layout
   #dev.off()
@@ -433,102 +350,6 @@ for(the_id in listodo[1:to_go]){
   }
   
   ####################################################################
-  ################# Clip the RapidEye tile 
-  
-  for(year in c(2016)){
-    plot(margins_utm,axes=F,xlab="",ylab="")
-    print(year)
-    the_pt
-    tryCatch({
-      rpdy <- brick(paste(rpdy_dir,rpdy_bbox,sep=""))
-      rpdy_clip<-crop(rpdy,one_poly_utm)
-      
-      blu <- raster(rpdy_clip,1)
-      grn <- raster(rpdy_clip,2)
-      red <- raster(rpdy_clip,3)
-      nir <- raster(rpdy_clip,4)
-      
-      R <- red
-      G <- grn
-      B <- blu
-      
-      stackNat <- stack(R,G,B)
-      ndvi <- (nir-red)/(nir+red)
-      #nbr  <- (nir-swir)/(nir+swir)
-      
-      ndvi_trend[i,]$year <- year 
-      ndvi_trend[i,]$mean <- cellStats(crop(ndvi,in_poly_utm),stat='mean')
-      i <- i + 1
-      #stackVeg <- stack(nir,ndvi,grn)
-      #stackNIR <- stack(nir,red,grn)
-      
-      plotRGB(stackNat,stretch="hist",add=T)
-      
-      
-    },error=function(e){cat("Configuration impossible \n")})
-    lines(in_poly_utm,col="red",lwd=2)
-    #plot(in_poly,add=T,col="red")
-    
-    rect(
-      xleft =   margins_utm@xmin, 
-      ybottom = margins_utm@ymax-100, 
-      xright =  margins_utm@xmin+500, 
-      ytop =    margins_utm@ymax, 
-      col = "white", 
-      border = NA)
-    
-    title(main=paste0("Rapideye 2015-17"),font.main=2,cex.main=2,line=-3,adj=0.05)
-  }
-  
-  ####################################################################
-  ################# Clip the RapidEye tile 
-  
-  for(year in c(2016)){
-    plot(margins_utm,axes=F,xlab="",ylab="")
-    print(year)
-    the_pt
-    tryCatch({
-      spot <- brick(paste(spot_dir,spot_bbox,sep=""))
-      spot_clip<-crop(spot,one_poly_utm)
-      
-      blu <- raster(spot_clip,1)
-      grn <- raster(spot_clip,2)
-      red <- raster(spot_clip,3)
-      nir <- raster(spot_clip,4)
-      
-      R <- red
-      G <- grn
-      B <- blu
-      
-      stackNat <- stack(R,G,B)
-      ndvi <- (nir-red)/(nir+red)
-      #nbr  <- (nir-swir)/(nir+swir)
-      
-      ndvi_trend[i,]$year <- year 
-      ndvi_trend[i,]$mean <- cellStats(crop(ndvi,in_poly_utm),stat='mean')
-      i <- i + 1
-      #stackVeg <- stack(nir,ndvi,grn)
-      #stackNIR <- stack(nir,red,grn)
-      
-      plotRGB(stackNat,stretch="hist",add=T)
-      
-      
-    },error=function(e){cat("Configuration impossible \n")})
-    lines(in_poly_utm,col="red",lwd=2)
-    #plot(in_poly,add=T,col="red")
-    
-    rect(
-      xleft =   margins_utm@xmin, 
-      ybottom = margins_utm@ymax-100, 
-      xright =  margins_utm@xmin+500, 
-      ytop =    margins_utm@ymax, 
-      col = "white", 
-      border = NA)
-    
-    title(main=paste0("SPOT ",year),font.main=2,cex.main=2,line=-3,adj=0.05)
-  }
-  
-  ####################################################################
   ################# Clip the sentinel tile 
   for(year in c(yr_str_stnl:yr_end_stnl)){
     plot(margins,axes=F,xlab="",ylab="")
@@ -560,7 +381,7 @@ for(the_id in listodo[1:to_go]){
       plotRGB(stackNat,stretch="hist",add=T)
       
       
-    },error=function(e){print(paste0("no image available in ",year," for ",stnl_bbox))})
+    },error=function(e){print(paste0("no image available in ",year," for sentinel"))})
     lines(in_poly,col="red",lwd=2)
     
     rect(
