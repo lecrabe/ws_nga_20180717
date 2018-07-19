@@ -30,7 +30,7 @@ sae_dir  <- paste0(gfc_dir,
                    )
 
 ## Read the datafile and setup the correct names for the variables
-pts <- read.csv(paste0(sae_dir,"pts_CE_2018-07-19.csv"))
+pts <- read.csv(paste0(sae_dir,"pts_CE_2018-07-19_example.csv"))
 names(pts)
 
 map_code <- "map_class"

@@ -71,7 +71,7 @@ bb_pos_lsat <- nchar(lsat_basename)+6
 bb_pos_stnl <- nchar(stnl_basename)+6
 
 ## Read the datafile 
-pts <- read.csv(paste0(sae_dir,"pts_CE_2018-07-19.csv"))  #####  CHANGE TO MY VALUE HERE
+pts <- read.csv(paste0(sae_dir,"pts_CE_2018-07-19_example.csv"))  #####  CHANGE TO MY VALUE HERE
 head(pts)
 names(pts)
 
