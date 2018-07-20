@@ -11,7 +11,7 @@ It contains:
 
 - practical tutorials to the production of time series snippets to be used as complementary reference data for accuracy assessment and change area estimation
 
-![Alt text](/presentations/workshop_picture.jpeg?raw=true "Optional Title")
+![Alt text](/presentations/workshop_picture.jpg?raw=true "Optional Title")
 
 ### Requirements for the workshop
 
