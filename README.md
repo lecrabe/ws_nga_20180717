@@ -11,6 +11,8 @@ It contains:
 
 - practical tutorials to the production of time series snippets to be used as complementary reference data for accuracy assessment and change area estimation
 
+![Alt text](/presentations/workshop_picture.jpeg?raw=true "Optional Title")
+
 ### Requirements for the workshop
 
 If you do not have access to SEPAL, follow the below instructions:
