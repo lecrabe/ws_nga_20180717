@@ -14,40 +14,6 @@ time_start  <- Sys.time()
 aoi <- getData('GADM',path=paste0(rootdir,"/data/gadm/"), country= the_country, level=1)
 bb <- extent(aoi)
 
-####################################################################################
-####### CLIP GFC DATA TO BOUNDARIES
-####################################################################################
-setwd(gfc_dir)
-
-prefix <- "Hansen_GFC-2016-v1.4_"
-tiles <- unlist(paste0(prefix,"datamask",df_tiles@data$gfc_suffix))
-#tiles <- list.files(gfcstore_dir,pattern=glob2rx("*datamask*.tif"))
-tilesx <- substr(tiles,31,38)
-
-types <- c("treecover2000","lossyear","gain","datamask")
-
-for(type in types){
-  print(type)
-  to_merge <- paste(prefix,type,"_",tilesx,".tif",sep = "")
-  system(sprintf("gdal_merge.py -o %s -v -co COMPRESS=LZW %s",
-                 paste0(gfc_dir,"tmp_merge_",type,".tif"),
-                 paste0(gfcstore_dir,to_merge,collapse = " ")
-                 ))
-
-  system(sprintf("gdal_translate -ot Byte -projwin %s %s %s %s -co COMPRESS=LZW %s %s",
-                 floor(bb@xmin),
-                 ceiling(bb@ymax),
-                 ceiling(bb@xmax),
-                 floor(bb@ymin),
-                 paste0(gfc_dir,"tmp_merge_",type,".tif"),
-                 paste0(gfc_dir,"gfc_",type,".tif")
-  ))
-
-system(sprintf("rm %s",
-               paste0(gfc_dir,"tmp_merge_",type,".tif")
-               ))
-  print(to_merge)
-}
 
 #################### CREATE GFC TREE COVER MAP in 2000 AT THRESHOLD
 system(sprintf("gdal_calc.py -A %s --co COMPRESS=LZW --outfile=%s --calc=\"%s\"",
