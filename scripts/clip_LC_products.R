@@ -46,20 +46,25 @@ system(sprintf("gdal_calc.py -A %s -B %s -C %s --co COMPRESS=LZW --outfile=%s --
                "(C==1)*1+(C==0)*((B==0)*(A>0)*1+(B==0)*(A==0)*0+(B>0)*0)"
 ))
 
-#################### CREATE MAP 2000-2014 AT THRESHOLD (0 no data, 1 forest, 2 non-forest, 3 loss, 4 gain)
+#################### CREATE MAP beg-end years AT THRESHOLD (0 no data, 1 forest, 2 non-forest, 3 loss, 4 gain)
 system(sprintf("gdal_calc.py -A %s -B %s -C %s --co COMPRESS=LZW --outfile=%s --calc=\"%s\"",
                gfc_tc,
                gfc_ly,
                gfc_gn,
                gfc_mp,
-               "(C==1)*4+(C==0)*((B==0)*(A>0)*1+(B==0)*(A==0)*2+(B>0)*(B<15)*3+(B>=15)*1)"
+                 paste0("(C==1)*4+
+                        (C==0)*((B<",as.numeric(str_sub(beg_year, -2))-1,")*(A>0)*1
+                        +(B<",as.numeric(str_sub(beg_year, -2))-1,")*(A==0)*2
+                        +(B>",as.numeric(str_sub(beg_year, -2))-1,")*(B<",as.numeric(str_sub(end_year, -2))-1,")*3
+                        +(B>=",as.numeric(str_sub(end_year, -2))-1,")*1)
+                        ")
 ))
 
 #############################################################
 ### CROP TO COUNTRY BOUNDARIES
 system(sprintf("python %s/oft-cutline_crop.py -v %s -i %s -o %s -a %s",
                scriptdir,
-               paste0(gadm_dir,"gadm_",countrycode,"l1.shp"),
+               paste0(gadm_dir,"gadm_",the_country,"l1.shp"),
                gfc_mp,
                gfc_mp_crop,
                "OBJECTID"
@@ -92,7 +97,7 @@ system(sprintf("gdal_translate -ot Byte -projwin %s %s %s %s -co COMPRESS=LZW %s
 ### CROP TO COUNTRY BOUNDARIES
 system(sprintf("python %s/oft-cutline_crop.py -v %s -i %s -o %s -a %s",
                scriptdir,
-               paste0(gadm_dir,"gadm_",countrycode,"l1.shp"),
+               paste0(gadm_dir,"gadm_",the_country,"l1.shp"),
                paste0(esa_dir,"esa.tif"),
                paste0(esa_dir,"esa_crop.tif"),
                "OBJECTID"

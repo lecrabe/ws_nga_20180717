@@ -57,13 +57,15 @@ dir.create(esa_folder,showWarnings = F)
 
 #################### GFC PRODUCTS
 gfc_threshold <- 15
+beg_year <- 2006
+end_year <- 2016
 
 #################### PRODUCTS AT THE THRESHOLD
 gfc_tc       <- paste0(gfc_dir,"gfc_th",gfc_threshold,"_tc.tif")
 gfc_ly       <- paste0(gfc_dir,"gfc_th",gfc_threshold,"_ly.tif")
 gfc_gn       <- paste0(gfc_dir,"gfc_gain.tif")
-gfc_16       <- paste0(gfc_dir,"gfc_th",gfc_threshold,"_F_2016.tif")
-gfc_00       <- paste0(gfc_dir,"gfc_th",gfc_threshold,"_F_2000.tif")
-gfc_mp       <- paste0(gfc_dir,"gfc_map_2000_2014_th",gfc_threshold,".tif")
-gfc_mp_crop  <- paste0(gfc_dir,"gfc_map_2000_2014_th",gfc_threshold,"_crop.tif")
-gfc_mp_sub   <- paste0(gfc_dir,"gfc_map_2000_2014_th",gfc_threshold,"_sub_crop.tif")
+gfc_16       <- paste0(gfc_dir,"gfc_th",gfc_threshold,"_F_",end_year,".tif")
+gfc_00       <- paste0(gfc_dir,"gfc_th",gfc_threshold,"_F_",beg_year,".tif")
+gfc_mp       <- paste0(gfc_dir,"gfc_map_", beg_year,"_",end_year, "_th",gfc_threshold,".tif")
+gfc_mp_crop  <- paste0(gfc_dir,"gfc_map_", beg_year,"_",end_year, "_th",gfc_threshold,"_crop.tif")
+gfc_mp_sub   <- paste0(gfc_dir,"gfc_map_", beg_year,"_",end_year, "_th",gfc_threshold,"_sub_crop.tif")
