@@ -24,6 +24,7 @@ library(raster)
 library(rgeos)
 library(ggplot2)
 library(rgdal)
+library(stringr)
 
 ## Set the working directory
 rootdir       <- "~/ws_nga_20180717/"
@@ -59,6 +60,7 @@ dir.create(esa_folder,showWarnings = F)
 gfc_threshold <- 15
 beg_year <- 2006
 end_year <- 2016
+mmu <- 5
 
 #################### PRODUCTS AT THE THRESHOLD
 gfc_tc       <- paste0(gfc_dir,"gfc_th",gfc_threshold,"_tc.tif")
