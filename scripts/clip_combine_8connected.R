@@ -31,7 +31,7 @@ system(sprintf("gdal_calc.py -A %s -B %s --co COMPRESS=LZW --outfile=%s --calc=\
 ))
 
 #################### SIEVE TO THE MMU
-system(sprintf("gdal_sieve.py -st %s %s %s ",
+system(sprintf("gdal_sieve.py -8 -st %s %s %s ",
                mmu,
                paste0(dd_dir,"tmp_gfc_loss_0616_gt",gfc_threshold,".tif"),
                paste0(dd_dir,"tmp_gfc_loss_0616_gt",gfc_threshold,"_fsieve.tif")
@@ -64,7 +64,7 @@ system(sprintf("gdal_calc.py -A %s -B %s --co COMPRESS=LZW --outfile=%s --calc=\
 
 
 #################### SIEVE TO THE MMU
-system(sprintf("gdal_sieve.py -st %s %s %s ",
+system(sprintf("gdal_sieve.py -8 -st %s %s %s ",
                mmu,
                paste0(dd_dir,"tmp_gfc_2016_gt",gfc_threshold,".tif"),
                paste0(dd_dir,"tmp_gfc_2016_gt",gfc_threshold,"_fsieve.tif")
