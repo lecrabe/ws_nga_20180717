@@ -9,6 +9,7 @@
 
 time_start  <- Sys.time()
 
+aoi <- paste0(nfi_dir,"eco93.shp")
 
 ####################################################################################
 ####### COMBINE GFC LAYERS
@@ -101,10 +102,11 @@ system(sprintf("gdal_calc.py -A %s -B %s -C %s -D %s -E %s  --co COMPRESS=LZW --
 ### CROP TO COUNTRY BOUNDARIES
 system(sprintf("python %s/oft-cutline_crop.py -v %s -i %s -o %s -a %s",
                scriptdir,
-               paste0(gadm_dir,"gadm_",the_country,"l1.shp"),
+               aoi,
+               #paste0(gadm_dir,"gadm_",the_country,"l1.shp"),
                paste0(dd_dir,"tmp_dd_map_0616_gt",gfc_threshold,".tif"),
                paste0(dd_dir,"tmp_dd_map_0616_gt",gfc_threshold,"aoi_.tif"),
-               "OBJECTID"
+               "ECO93"
 ))
 
 #################### CREATE A COLOR TABLE FOR THE OUTPUT MAP

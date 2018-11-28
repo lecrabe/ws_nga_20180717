@@ -44,6 +44,7 @@ seg_dir  <- paste0(rootdir,"data/segments/")
 dd_dir   <- paste0(rootdir,"data/dd_map/")
 lc_dir   <- paste0(rootdir,"data/forest_mask/")
 esa_dir  <- paste0(rootdir,"data/esa/")
+nfi_dir  <- paste0(rootdir,"data/nfi/")
 
 dir.create(data_dir,showWarnings = F)
 dir.create(gadm_dir,showWarnings = F)
@@ -55,6 +56,7 @@ dir.create(lc_dir,showWarnings = F)
 dir.create(esa_dir,showWarnings = F)
 dir.create(gfcstore_dir,showWarnings = F)
 dir.create(esa_folder,showWarnings = F)
+dir.create(nfi_dir,showWarnings = F)
 
 #################### GFC PRODUCTS
 gfc_threshold <- 15
