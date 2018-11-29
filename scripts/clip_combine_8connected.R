@@ -135,9 +135,15 @@ system(sprintf("(echo %s) | oft-addpct.py %s %s",
 ################################################################################
 system(sprintf("gdal_translate -ot Byte -co COMPRESS=LZW %s %s",
                paste0(dd_dir,"tmp_dd_map_0616_gt",gfc_threshold,"pct.tif"),
-               paste0(dd_dir,"dd_map_0616_gt",gfc_threshold,".tif")
+               paste0(dd_dir,"dd_map_0616_gt",gfc_threshold,"_8connected.tif")
 ))
 
+system(sprintf("oft-his -i %s -o %s -um %s -maxval 5",
+               paste0(dd_dir,"dd_map_0616_gt",gfc_threshold,".tif"),
+               paste0(dd_dir,'dd_map_0616_gt_4_8_connected.txt'),
+               paste0(dd_dir,"dd_map_0616_gt",gfc_threshold,"_8connected.tif")
+               
+))
 
 system(sprintf("rm %s",
                paste0(dd_dir,"tmp*.tif")

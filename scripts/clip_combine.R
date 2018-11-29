@@ -106,7 +106,7 @@ system(sprintf("python %s/oft-cutline_crop.py -v %s -i %s -o %s -a %s",
                #paste0(gadm_dir,"gadm_",the_country,"l1.shp"),
                paste0(dd_dir,"tmp_dd_map_0616_gt",gfc_threshold,".tif"),
                paste0(dd_dir,"tmp_dd_map_0616_gt",gfc_threshold,"aoi_.tif"),
-               "ECO93"
+               "ECO93_ID"
 ))
 
 #################### CREATE A COLOR TABLE FOR THE OUTPUT MAP
