@@ -138,6 +138,9 @@ system(sprintf("gdal_translate -ot Byte -co COMPRESS=LZW %s %s",
                paste0(dd_dir,"dd_map_0616_gt",gfc_threshold,"_8connected.tif")
 ))
 
+################################################################################
+#################### COMPARE 4 AND 8 CONNECTEDNESS
+################################################################################
 system(sprintf("oft-his -i %s -o %s -um %s -maxval 5",
                paste0(dd_dir,"dd_map_0616_gt",gfc_threshold,".tif"),
                paste0(dd_dir,'dd_map_0616_gt_4_8_connected.txt'),
